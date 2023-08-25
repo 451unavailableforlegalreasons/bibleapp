@@ -1,12 +1,18 @@
 <template>
-    <h1>hello world</h1>
+
+    <MainPage/>
+
 </template>
 
 <script>
 
+
+import MainPage from './components/main.vue'
+
 export default {
   name: 'App',
   components: {
+      MainPage,
   }
 }
 </script>
