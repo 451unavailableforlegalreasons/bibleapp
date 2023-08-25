@@ -33,7 +33,7 @@ func Init_DB () {
 
 func open_database() (*sqlx.DB, error) {
 
-    db, err := sqlx.Connect("sqlite3", "database.db")
+    db, err := sqlx.Connect("sqlite3", "database/database.db")
     if err != nil {
         fmt.Println(err)
         fmt.Println("Coudln't connect to database")

@@ -17,7 +17,8 @@ func Logout(w http.ResponseWriter, r *http.Request) {
 
         Path: "/",
         // Domain: ".",
-        Expires: time.Now().Add(time.Hour * 2).Add(time.Second * 60),
+        // Expires: time.Now().Add(time.Hour * 2).Add(time.Second * 60), // it is a session cookie so no expire
+        // MaxAge:, max age is expire but in second and has the priority
 
         Secure: true,
         HttpOnly: true,
