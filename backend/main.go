@@ -2,6 +2,7 @@ package main
 
 import (
 	"bibleapp/routes/users"
+	"bibleapp/routes/bible"
     "bibleapp/services"
 	"fmt"
 	"log"
@@ -32,6 +33,8 @@ func main() {
     profileRouter.HandleFunc("/{uid:[0-9]+}", users.CreateProfile).Methods("POST");
 
 
+    bibleactionRouter := r.PathPrefix("/bible").Subrouter()
+    bibleactionRouter.HandleFunc("/getverses", bible.GetVerses).Methods("POST");
 
     srv := &http.Server{
         Handler:      r,

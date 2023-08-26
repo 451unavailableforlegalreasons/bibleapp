@@ -9,6 +9,13 @@
     - reset password function
     - crud for all other fields (fullname, age, sex, country, language)
 - user authentication and authorization
-- distributing bible by books and pages (not chapters)
-- highlighing endpoints to (crud)
 
+
+
+
+## Work in progress
+- DONE: defining how to store bible  (sql table)
+- DONE: parsing a bible and put it in the database
+- Endpoint to retreive verses list from a book chapter
+    (req: Mattew 12 1-25 --> Book: Mattew, Chapter:12, verse:1-15)
+    (resp: json with all verses)
