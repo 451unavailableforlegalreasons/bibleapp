@@ -40,7 +40,6 @@ func GetVerses(w http.ResponseWriter, r *http.Request) {
     }
 
 
-
     // can't request verse 15 to 2 but only 2 to 15
     // can only ask for 15 verses at a time
     diff := query["verseto"] - query["versefrom"]
