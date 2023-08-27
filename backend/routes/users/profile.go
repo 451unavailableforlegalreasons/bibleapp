@@ -19,6 +19,8 @@ func GetProfile(w http.ResponseWriter, r *http.Request) {
     if newcontent == nil {
         return
     }
+    fmt.Println(vars["uid"])
+    fmt.Println(vars)
     fmt.Println(newcontent)
     if newcontent == vars["uid"] {
         w.Write([]byte("this was your uid"))
