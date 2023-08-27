@@ -35,6 +35,9 @@ func main() {
 
     bibleactionRouter := r.PathPrefix("/bible").Subrouter()
     bibleactionRouter.HandleFunc("/getverses/{edition:[0-9]+}/{book:[0-9]+}/{chapter:[0-9]+}/{versefrom:[0-9]+}/{verseto:[0-9]+}", bible.GetVerses).Methods("GET");
+    bibleactionRouter.HandleFunc("/geteditions", bible.GetBibleEditions)
+    bibleactionRouter.HandleFunc("/getbooksofedition/{edition:[0-9]+}", bible.GetBibleBooksFromEdition)
+    bibleactionRouter.HandleFunc("/getnumberofversefrombookfromedition/{edition:[0-9]+}/{book:[0-9]+}", bible.GetNumberOfVersesFromBookFromEdition)
 
     srv := &http.Server{
         Handler:      r,

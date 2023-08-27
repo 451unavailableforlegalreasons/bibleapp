@@ -6,7 +6,11 @@ CREATE TABLE IF NOT EXISTS BibleEdition (
 
 CREATE TABLE IF NOT EXISTS BibleBook (
     name VARCHAR(20) unique not null,
-    id TINYINT PRIMARY KEY UNIQUE NOT NULL 
+    id TINYINT PRIMARY KEY UNIQUE NOT NULL, -- 
+    ordnum TINTY INT NOT NULL, -- order in the bible (Genesis: 1)
+    edition tinyint not null,
+
+    FOREIGN KEY (edition) REFERENCES BibleEdition(id)
 );
 
 

@@ -69,7 +69,7 @@ print("Done reading and parsing file")
 bookcounter = 1
 for key in map:
     print("Loading book of :", key)
-    cur.execute("INSERT INTO BibleBook Values (\"{}\", {});".format(key, bookcounter))
+    cur.execute("INSERT INTO BibleBook Values (\"{}\", {}, {}, {});".format(key, bookcounter, bookcounter, 1))
 
     for i in range(0,len(map[key])):
         # print(verse)
