@@ -116,13 +116,6 @@ func Login(w http.ResponseWriter, r *http.Request) {
         w.Write([]byte("error with your form"));
         return
     }
-    pass, err := HashPassword(logform.Password)
-    if err != nil {
-        fmt.Println("error hashing login")
-        w.WriteHeader(http.StatusBadRequest);
-        w.Write([]byte("error with your password"));
-        return
-    }
 
 
 
@@ -131,16 +124,15 @@ func Login(w http.ResponseWriter, r *http.Request) {
     var user struct {
         Id int `db:"id"`
         Age int `db:"age"`
-        Gender int `db:"gender"`
-        Country int `db:"country"`
-        Language int `db:"language"`
-        
+        Gender string `db:"gender"`
+        Country string `db:"country"`
+        Language string `db:"language"`
+        Password string `db:"password"`
     }
     err = services.DB.Get(
         &user, 
-        "SELECT id, age, gender, country, language FROM Users WHERE email=? AND password=?;", 
+        "SELECT rowid as id, password, age, gender, country, language FROM Users WHERE email=?", 
         logform.Email,
-        pass,
     )
     if err == sql.ErrNoRows {
         w.Header().Set("Content-Type", "application/json")
@@ -154,12 +146,26 @@ func Login(w http.ResponseWriter, r *http.Request) {
         w.WriteHeader(http.StatusInternalServerError)
         json.NewEncoder(w).Encode("{'err': 'internal database error'}")
         return
-    }
+    } 
 
-    w.Header().Set("Content-Type", "application/json")
-    w.WriteHeader(http.StatusOK);
-    json.NewEncoder(w).Encode(fmt.Sprintf("{'count': %d}", user))
-    return
+
+
+
+
+    // bcryp return nil if password match
+    if bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(logform.Password)) == nil {
+        fmt.Println("login successful");
+        w.Header().Set("Content-Type", "application/json")
+        w.WriteHeader(http.StatusOK)
+        json.NewEncoder(w).Encode("{'err': 'none'}")
+        return
+    } else {
+        fmt.Println("login failed");
+        w.Header().Set("Content-Type", "application/json")
+        w.WriteHeader(http.StatusOK)
+        json.NewEncoder(w).Encode("{'err': 'invalid credentials'}")
+        return
+    }
 }
 
 
@@ -181,7 +187,7 @@ func Register(w http.ResponseWriter, r *http.Request) {
         w.Write([]byte(err.Error()));
         return
     }
-    _, err = HashPassword(regform.Password)
+    pass, err := HashPassword(regform.Password)
     if err != nil {
         fmt.Println("error hashing register")
         w.WriteHeader(http.StatusBadRequest);
@@ -205,8 +211,27 @@ func Register(w http.ResponseWriter, r *http.Request) {
         "SELECT id, email, password FROM Users WHERE email=?;", 
         regform.Email,
     )
+    fmt.Printf("%+v\n",user)
     if err == sql.ErrNoRows {
         // user doesn't exists so everything is ok
+        fmt.Println("inserting new user")
+        res, err := services.DB.Exec(
+            "INSERT INTO Users (fullname, email, password, age, gender, country, language) VALUES (?, ?, ?, ?, ?, ?, ?);",
+            regform.FullName,
+            regform.Email,
+            pass,
+            regform.Age,
+            regform.Gender,
+            regform.Country,
+            regform.Language,
+        )
+        if err != nil {
+            fmt.Println(res, err)
+            w.Header().Set("Content-Type", "application/json")
+            w.WriteHeader(http.StatusInternalServerError)
+            json.NewEncoder(w).Encode("{'err': 'internal database error'}")
+            return
+        }
     } else if err != nil {
         fmt.Println("error login database");
         w.Header().Set("Content-Type", "application/json")
@@ -227,7 +252,6 @@ func Register(w http.ResponseWriter, r *http.Request) {
 
     fmt.Printf("%+v\n", regform)
     fmt.Printf("%+v\n", user)
-// INSERT INTO Users (fullname, email, password, age, gender, country, language) VALUES (?, ?, ?, ?, ?, ?, ?);
 
     w.WriteHeader(http.StatusOK);
     w.Write([]byte("success"));

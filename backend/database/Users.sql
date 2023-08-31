@@ -1,5 +1,5 @@
 CREATE TABLE IF NOT EXISTS Users (
-    id INT PRIMARY KEY UNIQUE NOT NULL, -- index table based on id
+    id INTEGER PRIMARY KEY UNIQUE ,--NOT NULL, -- index table based on id
     fullname VARCHAR(30) NOT NULL,
     email VARCHAR(35) NOT NULL UNIQUE, -- index table based on this too
     password BINARY(32) NOT NULL,
