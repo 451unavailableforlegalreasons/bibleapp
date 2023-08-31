@@ -1,5 +1,5 @@
 CREATE TABLE IF NOT EXISTS Users (
-    id INT PRIMARY KEY UNIQUE NOT NULL AUTOINCREMENT, -- index table based on id
+    id INT PRIMARY KEY UNIQUE NOT NULL, -- index table based on id
     fullname VARCHAR(30) NOT NULL,
     email VARCHAR(35) NOT NULL UNIQUE, -- index table based on this too
     password BINARY(32) NOT NULL,
@@ -37,8 +37,15 @@ UPDATE Users SET email=? WHERE id=?;
 UPDATE Users SET password=? WHERE id=?;
 
 
+-- ================================ --
+--          Session table           --
+-- ================================ --
 
 
+CREATE TABLE IF NOT EXISTS Session(
+    sid VARCHAR(20) PRIMARY KEY UNIQUE NOT NULL, 
+    b64content TEXT not null
+);
 
 --------------------------------------------
 --  turning above queries into procedures --
