@@ -44,7 +44,8 @@ UPDATE Users SET password=? WHERE id=?;
 
 CREATE TABLE IF NOT EXISTS Session(
     sid VARCHAR(20) PRIMARY KEY UNIQUE NOT NULL, 
-    b64content TEXT not null
+    b64content TEXT not null,
+    expire DATE not null
 );
 
 --------------------------------------------

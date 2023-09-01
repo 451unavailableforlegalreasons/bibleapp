@@ -46,6 +46,18 @@ func main() {
     bibleRouter.HandleFunc("/getbooksofedition/{edition:[0-9]+}", bible.GetBibleBooksFromEdition)
     bibleRouter.HandleFunc("/getnumberofversefrombookfromedition/{edition:[0-9]+}/{book:[0-9]+}", bible.GetNumberOfVersesFromBookFromEdition)
 
+    bibleRouter.HandleFunc("/highlight", bible.ReadHighlight).Methods("GET")
+    bibleRouter.HandleFunc("/highlight", bible.CreateHighlight).Methods("POST")
+    bibleRouter.HandleFunc("/highlight", bible.EditHighlight).Methods("PUT")
+    bibleRouter.HandleFunc("/highlight", bible.DeleteHighlight).Methods("DELETE")
+
+
+
+
+
+
+
+
     srv := &http.Server{
         Handler:      r,
         Addr:         "localhost:8080",
@@ -124,7 +136,7 @@ func authenticationMiddleware(next http.Handler) http.Handler {
             Sid string `db:"sid"`
             Value string `db:"value"` // base64 encoded json data
         }
-        err = services.DB.Get(&storage, "SELECT * FROM Sessions WHERE sid=$1", token.Value) // ignore the lsp error
+        err = services.DB.Get(&storage, "SELECT * FROM Sessions WHERE sid=?", token.Value) // ignore the lsp error
         if err != nil {
             w.WriteHeader(http.StatusForbidden);
             w.Write([]byte("invalid cookie"));

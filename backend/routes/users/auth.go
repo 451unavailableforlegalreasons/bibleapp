@@ -160,6 +160,7 @@ func Login(w http.ResponseWriter, r *http.Request) {
         json.NewEncoder(w).Encode("{'err': 'none'}")
         return
     } else {
+        // create cookie in Session database and send it to the client
         fmt.Println("login failed");
         w.Header().Set("Content-Type", "application/json")
         w.WriteHeader(http.StatusOK)
