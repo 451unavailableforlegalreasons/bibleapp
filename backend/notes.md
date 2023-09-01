@@ -2,8 +2,8 @@
 
 ## Functionalities to implement:
 - users acounts (storing the right data in permanent database - sqlite for now)
-    - define user requirements: (email, password, fullname, age, gender, country, language)
-    - login with email
+    - DONE:define user requirements: (email, password, fullname, age, gender, country, language)
+    - DONE:login with email and password
     - verify email function
     - change email (send and email to new address and if user clicks on link: change to new email)
     - reset password function
@@ -16,6 +16,6 @@
 ## Work in progress
 - DONE: defining how to store bible  (sql table)
 - DONE: parsing a bible and put it in the database
-- Endpoint to retreive verses list from a book chapter
+- DONE: Endpoint to retreive verses list from a book chapter
     (req: Mattew 12 1-25 --> Book: Mattew, Chapter:12, verse:1-15)
     (resp: json with all verses)

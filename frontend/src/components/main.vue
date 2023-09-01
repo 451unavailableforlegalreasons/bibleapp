@@ -1,19 +1,21 @@
 <template>
 
  
-<main class="flex align-center justify-center" style="border: 1px solid green">
-    <div class="mainpage mx-2 flex justify-evenly py-auto columns-2xs h-screen content-center">
+<main  class="flex align-center justify-center" style="border: 1px solid green">
+    <div id="mainpage" class="mainpage mx-2 flex justify-evenly py-auto columns-2xs h-screen content-center">
         <Turnpage turndirection="left" />
-        <Page @lastinsertedvnum="lastinsertedvnum"
+        <Page @updatelastindex="updatelastindex"
               @getmoreverses="getmoreverses" 
+              :lastinsertedindex=lastinsertedindex
               :pagenum=1
               :chapter=chapter 
-              :verses=versesforpage1 />
-        <Page @lastinsertedvnum="lastinsertedvnum"
+              :verses=allverses />
+        <Page @updatelastindex="updatelastindex"
               @getmoreverses="getmoreverses" 
+              :lastinsertedindex=lastinsertedindex
               :pagenum=2
               :chapter=chapter 
-              :verses=versesforpage2 />
+              :verses=allverses />
         <Turnpage turndirection="right" />
     </div>
 </main>
@@ -67,12 +69,7 @@ export default {
               {"vnum":26,"verse":"And the earth brought forth grass, and herb yielding seed after his kind, and the tree yielding fruit, whose seed was in itself, after his kind: and God saw that it was good."},
               {"vnum":27,"verse":"And the evening and the morning were the third day."},
 ],
-          versesforpage1: [
-              {"vnum":27,"verse":"And the evening and the morning were the third day."},
-          ],
-          versesforpage2: [],
-        page1lastinsertedindex: 0,
-        lastdisplayedverse: 0,
+        lastinsertedindex: 0,
       }
   },
   methods: {
@@ -96,14 +93,49 @@ export default {
           this.versesforpage1.push({"vnum": pageid, "verse": "burh"})
           console.log(this.versesforpage1)
 
+      },
+      pagefilled (iterationcount, pagenum) {
+          if (pagenum === 1) {
+              this.lastinsertedindex = iterationcount;
+          } else if (pagenum === 2) {
+              //update var for turnpage to work
+          } else {
+              console.log("invalid pagenum")
+          }
       }
 
   },
 
+  // mounted () {
+  //     let maindiv = document.getElementById("mainpage")
+  //     maindiv.addEventListener(
+  //         "click",
+  //         handleMousedown,
+  //         // passiveSupported ? { passive: true } : false,
+  //     );
+  // },
 }
-// onMounted() => {
-//     this.versesforpage1 = [this.allverses[0]]
+
+
+// function handleMousedown() {
+//     let maindiv = document.getElementById("mainpage")
+//     let children = maindiv.children
+//     for(var i=0; i<children.length; i++){
+//         var child = children[i];
+//         // child.style.color = "red";
+//         if (child.id) {
+//             console.log(child.id)
+//             let selection = window.getSelection()
+//             console.log(selection)
+//
+//             let verses = child.children
+//             for (var j=0; j < verses.length; j++) {
+//                 if (verses[j].parentElement.id)
+//             }
+//         }
+//     }
 // }
+//
 </script>
 
 <style scoped>
