@@ -36,6 +36,7 @@ CREATE TABLE IF NOT EXISTS Verse (
 
 
 CREATE TABLE IF NOT EXISTS Note (
+    noteid INTEGER PRIMARY KEY NOT NULL AUTOINCREMENT,
     author TINYINT NOT NULL, -- linked to users table
 
     bibleEdition TINYINT NOT NULL, -- linked to BibleEdition table
