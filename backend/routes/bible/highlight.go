@@ -14,8 +14,24 @@ import (
 
 
 type Highlight struct {
-    BibleEdition int `json:"bibledition" db:"bibledition"`
-    // ...
+    // in database its called a note but its also a highlight so... sry for the confusion
+    HighligthId int `json:"hid" db:"noteid"`
+    Author int `json:"author" db:"author"`
+
+    BibleEdition int `json:"edition" db:"bibleEdition"`
+    BibleBook int `json:"book" db:"bibleBook"`
+    BookChapterStart int `json:"chapterstart" db:"bookChapterStart"`
+    BookChapterEnd int `json:"chapterend" db:"bookChapterEnd"`
+    
+    VerseNumberStart int `json:"vnumstart" db:"verseNumberStart"`
+    VerseNumberEnd int `json:"vnumend" db:"verseNumberEnd"`
+
+    CharNumStart int `json:"charnumstart" db:"CharNumStart"`
+    CharNumEnd int `json:"charnumend" db:"CharNumEnd"`
+
+
+    AuthorNote string `json:"note" db:"authorNote"`
+    HighlighColor int `json:"color" db:"highlightColor"`
 }
 
 
@@ -99,7 +115,7 @@ func ReadHighlight(w http.ResponseWriter, r *http.Request) {
     }
     
     // filter invalid parameters (param exiss but invalid value) and return error
-    for index, _ := range params{
+    for index:=0; index < len(params); index++{
         tmperror := params[index].parsingerror
         if  tmperror != nil && params[index].rawurldata != "" {
             // if the parameter is used but the value couldn't be parsed then its an error - compared to params not provided so error when parsing
@@ -112,8 +128,9 @@ func ReadHighlight(w http.ResponseWriter, r *http.Request) {
 
     // clean the array from non passed parameters
     // and build the query based on supplied parameters 
-    var filteredparams []queryparms
-    var query string = `SELECT * FROM Verses WHERE author=?`
+    var filteredparams []interface{}
+    filteredparams = append(filteredparams, 1) // 1 is for the author id then it will be replaced with the id from the sid cookie
+    var query string = `SELECT * FROM Note WHERE author=?`
     querypieces := []string{ 
         `AND bibleEdition=?`,
         `AND bibleBook=?`,
@@ -127,25 +144,77 @@ func ReadHighlight(w http.ResponseWriter, r *http.Request) {
         if tmperror != nil && value.rawurldata == "" {
             continue
         } else {
-            filteredparams = append(filteredparams, params[index])
+            filteredparams = append(filteredparams, int(params[index].parseddata))
             query = strings.Join([]string{query, querypieces[index]}, " ")
+        }
+    }
+    // future me will need to make sure user don't retreive all their highlight from any edition, any book ...
+    // but he will do it once someone is exploiting my lazyness and crashing the servers
+    // make sure edition, book and chapter start and end are provided. the rest is not that important in order to prevent DOS
+    var minqueryparams = []struct {
+        pname string
+        validated bool
+    }{{"edition", false}, {"book", false}, {"chapterfrom", false}, {"chapterto", false}}
+    for _, value := range params{
+        for i, v := range minqueryparams {
+            if v.pname == value.urlparamname && value.parsingerror == nil {
+                minqueryparams[i].validated = true
+            }
+        }
+    }
+    for _,v := range minqueryparams {
+        if v.validated == false {
+            fmt.Println("error not all min query params provided");
+            http.Error(w, "error not all min query params provided", http.StatusInternalServerError)
+            return
+        }
+    }
+    
+
+    query = strings.Join([]string{query, ";"}, "")
+
+    // fmt.Println(query)
+    var highlights []Highlight
+    if services.DB == nil {
+        services.Init_DB()
+        if services.DB == nil {
+            fmt.Println("database connection error")
+            http.Error(w, "error connecting to database", http.StatusInternalServerError)
+            return
+        }
+    }
+    fmt.Println(filteredparams...) 
+    rows, err := services.DB.Queryx(query, filteredparams...)
+    defer rows.Close()
+    for rows.Next() {
+        var highlight Highlight
+        err = rows.StructScan(&highlight)
+        if err != nil {
+            fmt.Println("error rowscan : ", err);
+            http.Error(w, "error reading from database to retreive your highlights", http.StatusInternalServerError)
+            return
+        } else {
+            highlights = append(highlights, highlight)
         }
     }
 
 
-    query = strings.Join([]string{query, ";"}, "")
+    if rows.Err() != nil {
+        fmt.Println("error rows: ", err);
+        http.Error(w, "error reading from database to retreive your highlights", http.StatusInternalServerError)
+        return
+    }
 
-    fmt.Println(query)
-    // now execute query with 'filteredparams...'
 
     w.Header().Set("Content-Type", "application/json")
     w.WriteHeader(http.StatusOK);
-    json.NewEncoder(w).Encode(filteredparams)
+    json.NewEncoder(w).Encode(highlights)
 }
 
 
 func EditHighlight(w http.ResponseWriter, r *http.Request) {
     // based on highligth id edit text or any field associated except the beginning and end (for that user needs to delete the highlith and create a new one)
+    // user can only change text and color
     w.Header().Set("Content-Type", "application/json")
     w.WriteHeader(http.StatusOK);
     // json.NewEncoder(w).Encode()

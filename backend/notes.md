@@ -11,6 +11,7 @@
 - user authentication and authorization
 
 
+- highlight make sure user does store the same highlight twice (because they curently can)
 
 
 ## Work in progress
@@ -19,3 +20,4 @@
 - DONE: Endpoint to retreive verses list from a book chapter
     (req: Mattew 12 1-25 --> Book: Mattew, Chapter:12, verse:1-15)
     (resp: json with all verses)
+
