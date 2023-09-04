@@ -12,6 +12,7 @@
 
 
 - highlight make sure user does store the same highlight twice (because they curently can)
+- add emailverified column in database schema for user
 
 
 ## Work in progress

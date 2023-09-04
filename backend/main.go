@@ -2,6 +2,7 @@ package main
 
 import (
 	"bibleapp/routes/users"
+	umanagement "bibleapp/routes/users/account"
 	"bibleapp/routes/bible"
     "bibleapp/services"
 	"fmt"
@@ -38,6 +39,15 @@ func main() {
     accountRouter.HandleFunc("/settings", users.PostSettings).Methods("POST");// change settings route
     // profileRouter.HandleFunc("/{uid:[0-9]+}", users.GetProfile).Methods("GET");
     // profileRouter.HandleFunc("/{uid:[0-9]+}", users.CreateProfile).Methods("POST");
+    accountRouter.HandleFunc("/settings/ask-email-verif", umanagement.AskEmailConf).Methods("GET"); 
+    accountRouter.HandleFunc("/settings/confirmemail/{token}/{email}/{datalimit}", umanagement.ConfirmEmail).Methods("POST"); 
+
+
+
+
+
+
+
 
 
     bibleRouter := r.PathPrefix("/bible").Subrouter()
