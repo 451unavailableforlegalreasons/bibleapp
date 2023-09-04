@@ -49,7 +49,7 @@ func main() {
     bibleRouter.HandleFunc("/highlight", bible.ReadHighlight).Methods("GET")
     bibleRouter.HandleFunc("/highlight", bible.CreateHighlight).Methods("POST")
     bibleRouter.HandleFunc("/highlight", bible.EditHighlight).Methods("PUT")
-    bibleRouter.HandleFunc("/highlight", bible.DeleteHighlight).Methods("DELETE")
+    bibleRouter.HandleFunc("/highlight/{noteid:[0-9]+}", bible.DeleteHighlight).Methods("DELETE")
 
 
 
