@@ -31,17 +31,22 @@ func main() {
     authRouter.HandleFunc("/register", users.Register).Methods("POST");
     authRouter.HandleFunc("/logout", users.Logout).Methods("POST");
     
-    accountRouter := userRouter.PathPrefix("").Subrouter();
-    accountRouter.Use(authenticationMiddleware); // for every requests made to /users/profile/*, the middel ware will do its job
-    accountRouter.HandleFunc("/profile", users.GetProfile).Methods("GET");  // get profile info route
-    accountRouter.HandleFunc("/profile", users.PostProfile).Methods("POST"); // update profile route
-    accountRouter.HandleFunc("/settings", users.GetSettings).Methods("GET"); // get current settings route
-    accountRouter.HandleFunc("/settings", users.PostSettings).Methods("POST");// change settings route
-    // profileRouter.HandleFunc("/{uid:[0-9]+}", users.GetProfile).Methods("GET");
-    // profileRouter.HandleFunc("/{uid:[0-9]+}", users.CreateProfile).Methods("POST");
-    accountRouter.HandleFunc("/settings/ask-email-verif", umanagement.AskEmailConf).Methods("GET"); 
-    accountRouter.HandleFunc("/settings/confirmemail/{token}/{email}/{datalimit}", umanagement.ConfirmEmail).Methods("POST"); 
+    uselessrouter := userRouter.PathPrefix("").Subrouter();
+    uselessrouter.Use(authenticationMiddleware); // for every requests made to /users/profile/*, the middel ware will do its job
+    uselessrouter.HandleFunc("/profile", users.GetProfile).Methods("GET");  // get profile info route
+    uselessrouter.HandleFunc("/profile", users.PostProfile).Methods("POST"); // update profile route
+    uselessrouter.HandleFunc("/settings", users.GetSettings).Methods("GET"); // get current settings route
+    uselessrouter.HandleFunc("/settings", users.PostSettings).Methods("POST");// change settings route
 
+    // Account 'critical' func 
+    accountRouter := userRouter.PathPrefix("/account").Subrouter();
+    // verify email
+    accountRouter.HandleFunc("/ask-email-verif", umanagement.AskEmailConf).Methods("GET"); 
+    accountRouter.HandleFunc("/confirmemail/{token}/{email}/{datalimit}", umanagement.ConfirmEmail).Methods("POST"); 
+    // reset pasword
+    accountRouter.HandleFunc("/ask-reset-password", umanagement.AskRstPassword).Methods("POST"); // enter email and receive reset link
+    accountRouter.HandleFunc("/reset-password-form/{token}/{seed}/{email}/{datelim:[0-9]+}", umanagement.RstPasswordForm).Methods("GET"); // enter new password in form (with token, seed,...)
+    accountRouter.HandleFunc("/reset-password-form", umanagement.RstPassword).Methods("POST"); // change password in database
 
 
 
