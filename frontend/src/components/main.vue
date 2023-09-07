@@ -4,13 +4,13 @@
 <main  class="flex align-center justify-center" style="border: 1px solid green">
     <div id="mainpage" class="mainpage mx-2 flex justify-evenly py-auto columns-2xs h-screen content-center">
         <Turnpage turndirection="left" />
-        <Page @updatelastindex="updatelastindex"
+        <Page @pagefilled="pagefilled"
               @getmoreverses="getmoreverses" 
               :lastinsertedindex=lastinsertedindex
               :pagenum=1
               :chapter=chapter 
               :verses=allverses />
-        <Page @updatelastindex="updatelastindex"
+        <Page @pagefilled="pagefilled"
               @getmoreverses="getmoreverses" 
               :lastinsertedindex=lastinsertedindex
               :pagenum=2
@@ -95,10 +95,14 @@ export default {
 
       },
       pagefilled (iterationcount, pagenum) {
+          console.log("page filled called: ", pagenum, iterationcount)
           if (pagenum === 1) {
+              console.log("page 1 was filled")
+              console.log(iterationcount)
               this.lastinsertedindex = iterationcount;
           } else if (pagenum === 2) {
-              //update var for turnpage to work
+              console.log("page 2 was filled")
+              //update global lastinsertedverse for turnpage to work
           } else {
               console.log("invalid pagenum")
           }
