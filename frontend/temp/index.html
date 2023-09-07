@@ -1,0 +1,115 @@
+<!-- POP UP -->
+<!-- the pop up that will be displayed when lick released from cursor highlight in bible app-->
+<!doctype html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="/out.css" rel="stylesheet">
+</head>
+<body>
+  <h1 class="text-3xl font-bold">
+      pop up
+  </h1>
+
+
+
+  <div id="popup" class="container d-flex flex-col justify-center content-center" style="max-width: 20%;">
+      <div id="topbar" class="flex justify-end">
+          <button id="closebtn" class="rounded-lg drop-shadow-xl">X<button>
+      </div>
+      <div id="text-input" class="flex flex-col justify-center content-center">
+          <textarea id="notetext" name="note" rows=5 cols=32 class="notetext"
+                placeholder="Write your thoughts here"
+                style="resize: none;"
+              ></textarea>
+      </div>
+
+      <div id="colors" class="flex flex-col justify-center content-center">
+          <h4>Choose the highlight color</h4>
+          <ul id="color-list list-none flex flex-row justify-center content-center">
+              <li id="yellow" class="rounded-full colorcircle yellow yellow-outline"></li>
+              <li id="green" class="rounded-full colorcircle green green-outline"></li>
+              <li id="blue" class="rounded-full colorcircle blue blue-outline"></li>
+              <li id="cyan" class="rounded-full colorcircle cyan cyan-outline"></li>
+              <li id="purple" class="rounded-full colorcircle purple purple-outline"></li>
+              <li id="orange" class="rounded-full colorcircle orange orange-outline"></li>
+              <li id="red" class="rounded-full colorcircle red red-outline"></li>
+          </ul>
+      </div>
+
+
+      <div id="botbar" class="block">
+          <button id="validat" class="rounded-lg drop-shadow-xl text-white block
+
+
+button bg-green-700 rounded-lg cursor-pointer select-none
+    active:translate-y-2  active:[box-shadow:0_0px_0_0_#3BEB3B,0_0px_0_0_#1b70f841]
+    active:border-b-[0px]
+    transition-all duration-150 [box-shadow:0_10px_0_0_#1b70f841,0_15px_0_0_#1b70f841]
+    border-b-[1px] border-green-400
+              ">Validate<button>
+      </div>
+  </div>
+
+
+<style>
+html {
+    background-color: beige;
+}
+
+
+#closebtn {
+    border: 1px solid grey;
+    border-radius: 5%;
+    padding: 3px 3px;
+}
+#validat {
+    background-color: #21EB5A;
+    border: 1px solid #17B343;
+    border-radius: 5%;
+    padding: 3px 3px;
+}
+
+#popup {
+    border: 1px solid white;
+    border-radius: 2%;
+    padding: 1em;
+    background-color: white;
+}
+
+
+
+.colorcircle {
+    display: inline-flex;
+    padding: 12px;
+}
+.colorcircle::hover {
+    cursor: pointer;
+}
+
+
+.notetext {
+    border: 1px solid grey;
+    border-radius: 2%;
+}
+
+
+
+.yellow { background-color: yellow; }
+.yellow-outline { border: 2px solid black; }
+.green { background-color: green; }
+.green-outline { border: 2px solid black; }
+.blue { background-color: blue; }
+.blue-outline { border: 2px solid black; }
+.cyan { background-color: cyan; }
+.cyan-outline { border: 2px solid black; }
+.purple { background-color: purple; }
+.purple-outline { border: 2px solid black; }
+.orange { background-color: orange; }
+.orange-outline { border: 2px solid black; }
+</style>
+
+
+</body>
+</html>
