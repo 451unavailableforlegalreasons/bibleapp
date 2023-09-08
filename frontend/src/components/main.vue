@@ -3,7 +3,9 @@
  
 <main  class="flex align-center justify-center" style="border: 1px solid green">
     <div id="mainpage" class="mainpage mx-2 flex justify-evenly py-auto columns-2xs h-screen content-center">
-        <Turnpage turndirection="left" />
+        <Turnpage turndirection="left" 
+                  @turnpage="turnpage"
+        />
         <Page @pagefilled="pagefilled"
               @getmoreverses="getmoreverses" 
               :lastinsertedindex=lastinsertedindex
@@ -16,7 +18,9 @@
               :pagenum=2
               :chapter=chapter 
               :verses=allverses />
-        <Turnpage turndirection="right" />
+        <Turnpage turndirection="right" 
+                  @turnpage="turnpage"
+        />
     </div>
 </main>
 
@@ -35,6 +39,8 @@ export default {
   },
   data: function() {
       return {
+          gobalastverseinserted: 0, // for turning page to the right
+          lastinsertedindex: 0, // for page 2 to go where page 1 was filled
           bibleedition: {"name": "unknown", "id": 1},
           biblebook: {"name": "Genesis", "ordnum": 1},
           chapter: 1,
@@ -68,47 +74,59 @@ export default {
               {"vnum":25,"verse":"And God said, Let the earth bring forth grass, the herb yielding seed, and the fruit tree yielding fruit after his kind, whose seed is in itself, upon the earth: and it was so."},
               {"vnum":26,"verse":"And the earth brought forth grass, and herb yielding seed after his kind, and the tree yielding fruit, whose seed was in itself, after his kind: and God saw that it was good."},
               {"vnum":27,"verse":"And the evening and the morning were the third day."},
+              // filling with random thing just to overflow second page
+              {"vnum":28,"verse":"And God said, Let the earth bring forth grass, the herb yielding seed, and the fruit tree yielding fruit after his kind, whose seed is in itself, upon the earth: and it was so."},
+              {"vnum":29,"verse":"And the earth brought forth grass, and herb yielding seed after his kind, and the tree yielding fruit, whose seed was in itself, after his kind: and God saw that it was good."},
+              {"vnum":30,"verse":"And the evening and the morning were the third day."},
+              {"vnum":31,"verse":"And God said, Let the earth bring forth grass, the herb yielding seed, and the fruit tree yielding fruit after his kind, whose seed is in itself, upon the earth: and it was so."},
+              {"vnum":32,"verse":"And the earth brought forth grass, and herb yielding seed after his kind, and the tree yielding fruit, whose seed was in itself, after his kind: and God saw that it was good."},
+              {"vnum":33,"verse":"And the evening and the morning were the third day."},
+              {"vnum":34,"verse":"And God said, Let the earth bring forth grass, the herb yielding seed, and the fruit tree yielding fruit after his kind, whose seed is in itself, upon the earth: and it was so."},
+              {"vnum":35,"verse":"And the earth brought forth grass, and herb yielding seed after his kind, and the tree yielding fruit, whose seed was in itself, after his kind: and God saw that it was good."},
+              {"vnum":36,"verse":"And the evening and the morning were the third day."},
+              {"vnum":37,"verse":"And God said, Let the earth bring forth grass, the herb yielding seed, and the fruit tree yielding fruit after his kind, whose seed is in itself, upon the earth: and it was so."},
+              {"vnum":38,"verse":"And the earth brought forth grass, and herb yielding seed after his kind, and the tree yielding fruit, whose seed was in itself, after his kind: and God saw that it was good."},
+              {"vnum":39,"verse":"And the evening and the morning were the third day."},
+              {"vnum":40,"verse":"And God said, Let the earth bring forth grass, the herb yielding seed, and the fruit tree yielding fruit after his kind, whose seed is in itself, upon the earth: and it was so."},
+              {"vnum":41,"verse":"And the earth brought forth grass, and herb yielding seed after his kind, and the tree yielding fruit, whose seed was in itself, after his kind: and God saw that it was good."},
+              {"vnum":42,"verse":"And the evening and the morning were the third day."},
+              {"vnum":43,"verse":"And God said, Let the earth bring forth grass, the herb yielding seed, and the fruit tree yielding fruit after his kind, whose seed is in itself, upon the earth: and it was so."},
+              {"vnum":44,"verse":"And the earth brought forth grass, and herb yielding seed after his kind, and the tree yielding fruit, whose seed was in itself, after his kind: and God saw that it was good."},
+              {"vnum":45,"verse":"And the evening and the morning were the third day."},
 ],
-        lastinsertedindex: 0,
       }
   },
   methods: {
-      lastinsertedvnum (pagenum, index) {
-          console.log(pagenum, index)
-          if (pagenum == 1) {
-            this.page1lastinsertedindex=index
-          } else { 
-              this.versesforpage2 = this.allverses[this.page1lastinsertedindex]
-              this.lastdisplayedverse = index 
+      fetchverses(bibleedition, biblebook, biblechapter, fromverse, toverse) {
+      },
+      turnpage(turndirection) {
+          if (turndirection === "left") {
+              console.log("sorry can't turn left for now")
+          } else if (turndirection == "right") {
+              // update lastpagefirstvnum var before turning 
+              this.lastinsertedindex = 0 // index is relative to the array here (nothing global to the bible like vnum)
+              this.allverses = this.allverses.slice(this.gobalastverseinserted)
+          } else {
+              console.log("which way are you turning ?")
           }
       },
-      fetchverses(bibleedition, biblebook, biblechapter, fromverse, toverse) {
-
-
-
-      },
-      getmoreverses (pageid) {
-          console.log(pageid)
-          console.log(this.versesforpage1)
-          this.versesforpage1.push({"vnum": pageid, "verse": "burh"})
-          console.log(this.versesforpage1)
-
-      },
       pagefilled (iterationcount, pagenum) {
-          console.log("page filled called: ", pagenum, iterationcount)
           if (pagenum === 1) {
-              console.log("page 1 was filled")
-              console.log(iterationcount)
               this.lastinsertedindex = iterationcount;
           } else if (pagenum === 2) {
-              console.log("page 2 was filled")
-              //update global lastinsertedverse for turnpage to work
+              let lastinsertedindex = iterationcount - 1
+              this.gobalastverseinserted = this.allverses[lastinsertedindex].vnum
+              // console.log(this.allverses[lastinsertedindex])
+              // console.log("global", this.gobalastverseinserted)
           } else {
               console.log("invalid pagenum")
           }
       }
 
   },
+  updated () {
+      console.log(this.allverses)
+  }
 
   // mounted () {
   //     let maindiv = document.getElementById("mainpage")

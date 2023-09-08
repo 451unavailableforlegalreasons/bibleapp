@@ -32,6 +32,7 @@ export default {
     },
     mounted() {
         // put something in page so update gets called and the page is filled until overflow
+        // this.iterationCount = this.globalverseoffset
         if (this.pagenum === 1) {
             let currentverse = this.verses[this.iterationCount]
             if (currentverse === undefined) {
@@ -47,6 +48,32 @@ export default {
             return
         }
 
+
+    },
+    watch: {
+        verses(newv, oldv) {
+            //clean from old verses and push new ones
+            this.localverses = []
+            this.pagefilled = false
+            this.firstiterationdone = false
+            // put something in page so update gets called and the page is filled until overflow
+            this.iterationCount = this.lastinsertedindex
+            console.log(this.iterationCount)
+            if (this.pagenum === 1) {
+                let currentverse = this.verses[this.iterationCount]
+                if (currentverse === undefined) {
+                    console.log("no verse error")
+                    return 
+                } else {
+                    this.localverses.push(currentverse);
+                    this.iterationCount++;
+                }
+            } else {
+                //wait for this.lastinsertindex to change (event caused by page 1)
+                // it will trigger update in page1 (but nochange) & update in page2 -> pick verse up from where page1 left
+                return
+            }
+        }
 
     },
     updated() {
@@ -75,8 +102,10 @@ export default {
             this.pagefilled = true
             this.localverses.pop()
             this.iterationCount--;
+            console.log("iteration count filled p2: ", this.iterationCount)
             this.$emit("pagefilled", this.iterationCount, this.pagenum)
         }
+        console.log(overflows, currentverse, this.pagefilled, this.iterationCount, this.localverses)
 
     }
 }

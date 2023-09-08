@@ -21,9 +21,9 @@ export default {
       turnpage: function (event) {
           console.log(this.turndirection)
           if (this.turndirection=="left") {
-              console.log("turning left")
+              this.$emit("turnpage", this.turndirection)
           } else if (this.turndirection=="right"){
-              console.log("turning right")
+              this.$emit("turnpage", this.turndirection)
           } else {
               console.log("unknown direction")
           }
