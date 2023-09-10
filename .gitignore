@@ -1,2 +1,4 @@
 /target/**
 /target/
+/backend/database/mainbranchcontent/
+/backend/database/mainbranchcontent/**

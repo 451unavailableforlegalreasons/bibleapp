@@ -17,10 +17,6 @@ type editionStruct struct {
     Id int `json:"id" db:"id"`
 }
 
-type bookByEdition struct {
-    Name string `json:"name" db:"name"`
-    Ordnum int `json:"ordnum" db:"ordnum"`
-}
 
 
 
@@ -45,7 +41,7 @@ func GetBibleEditions(w http.ResponseWriter, r *http.Request) {
 
     var edition editionStruct
     for rows.Next() {
-        err := rows.Scan(&edition.Name, &edition.Id)
+        err := rows.Scan(&edition.Name, &edition.Language, &edition.Id)
         if err != nil {
             fmt.Println("error reading bible editions from database: ", err);
             w.Header().Set("Content-Type", "application/json")
