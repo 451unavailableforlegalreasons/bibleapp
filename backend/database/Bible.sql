@@ -1,32 +1,15 @@
 CREATE TABLE IF NOT EXISTS BibleEdition (
     name VARCHAR(20) UNIQUE NOT NULL,
+    language VARCHAR(20) NOT NULL,
     id TINYINT PRIMARY KEY UNIQUE NOT NULL 
 );
 
+CREATE TABLE IF NOT EXISTS BibleZip (
+    edition TINYINT NOT NULL,
+    zipcontent BLOB NOT NULL,
 
-CREATE TABLE IF NOT EXISTS BibleBook (
-    name VARCHAR(20) unique not null,
-    id TINYINT PRIMARY KEY UNIQUE NOT NULL, -- 
-    ordnum TINTY INT NOT NULL, -- order in the bible (Genesis: 1)
-    edition tinyint not null,
 
     FOREIGN KEY (edition) REFERENCES BibleEdition(id)
-);
-
-
-CREATE TABLE IF NOT EXISTS Verse (
-    bibleEdition TINYINT NOT NULL, -- linked to BibleEdition table
-    bibleBook TINYINT NOT NULL, -- linked to book table
-    bookChapter TINYINT NOT NULL,
-    verseNumber TINYINT NOT NULL,
-
-
-    verseContent TEXT NOT NULL,
-
-
-
-    FOREIGN KEY(bibleEdition) REFERENCES BibleEdition(id),
-    FOREIGN KEY(bibleBook) REFERENCES BibleBook(id)
 );
 
 
@@ -34,9 +17,8 @@ CREATE TABLE IF NOT EXISTS Verse (
 
 -- highlights and note table
 
-
 CREATE TABLE IF NOT EXISTS Note (
-    noteid INTEGER PRIMARY KEY NOT NULL AUTOINCREMENT,
+    noteid INTEGER PRIMARY KEY NOT NULL ,--AUTOINCREMENT,
     author TINYINT NOT NULL, -- linked to users table
 
     bibleEdition TINYINT NOT NULL, -- linked to BibleEdition table
