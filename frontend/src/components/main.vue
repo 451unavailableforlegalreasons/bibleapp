@@ -49,9 +49,14 @@ export default {
   },
   data: function() {
       return {
-          backwardversestart: 0, // 
-          gobalastverseinserted: 0, // for turning page to the right (when right button is clicked, go on from this index)
-          lastinsertedindex: 0, // for page 2 to go where page 1 was filled
+          previouspageinfo: { // when turning right, save the previous state here and when turn left if clicked, bring thoses back
+              startvindex: -1, // if it doesn't exists in local storage, put the user on the 1st page of an edition
+              endvindex: -1,
+          }, // this should be saved in the local storage and loaded up when starting
+          currentpageinfo: {
+              gobalastverseinserted: 0, // index of the last inserted verse on currentpage. When clicking on turn right, start from this index
+              lastinsertedindex: 0, // same as above but to sync page 2 with page 1 (page 2 continues where page 1 left)
+          },
           bibleedition: {"name": "unknown", "id": 1},
           biblebook: {"name": "Genesis", "ordnum": 1},
           chapter: 1,
@@ -113,10 +118,15 @@ export default {
       turnpage(turndirection) {
           if (turndirection === "left") {
               console.log("sorry can't turn left for now")
+
           } else if (turndirection == "right") {
               // update lastpagefirstvnum var before turning 
-              this.lastinsertedindex = 0 // index is relative to the array here (nothing global to the bible like vnum)
-              this.allverses = this.allverses.slice(this.gobalastverseinserted)
+              this.previouspageinfo.startvindex = 0
+              this.previouspageinfo.endvindex = this.currentpageinfo.lastinsertedindex
+              
+
+              this.currentpageinfo.lastinsertedindex = 0 // index is relative to the array here (nothing global to the bible like vnum)
+              this.allverses = this.allverses.slice(this.currentpageinfo.gobalastverseinserted)
           } else {
               console.log("which way are you turning ?")
           }
