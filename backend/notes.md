@@ -1,21 +1,25 @@
 # Notes about the Bible app project
 
-# Changes
-- the server won't distribute verses with an api anymore but give the entire bible version to the browser (to be stored locally (an edition never changes so its ok)).
-- new way of doing things:
-    - user request a default formated bibile edition (on first load, then user can change the edition)
-    - server gives it
-    - edition stored locally on user storage
-    - highlights... are still pushed to the server (since the edition is formated, the char count, verse number will be the same)
-    - navigation doesn't iumplies requests anymore but saving browser state...
+# clientstorage branch fucntionalities
+The clientstorage branch is a new and lighter approach for the server
+Instead of distributing verses in groups of 15 os a specific edition, it sends once the whole bible edition 
+and let the client do its own stuff.
+
+Highlights don't change. (We suppose the client hasn't altered the bible data so there will be no verification 
+if overflows in highlights...).
+
+The bible edition will not be stored verse by verse in the database but edition will be formated, to contain
+enough information for the client to know what verse is what... accros every edition, and then zipped to be sent to the client.
+
+On the client it will stay in zipped format and be unzipped at every start (i know not that efficient but easier to implement)
 
 ## Functionalities to implement:
 - users acounts (storing the right data in permanent database - sqlite for now)
     - DONE:define user requirements: (email, password, fullname, age, gender, country, language)
     - DONE:login with email and password
-    - verify email function
+    - DONE:verify email function
+    - DONE:reset password function
     - change email (send and email to new address and if user clicks on link: change to new email)
-    - reset password function
     - crud for all other fields (fullname, age, sex, country, language)
 - user authentication and authorization
 
@@ -24,10 +28,4 @@
 - add emailverified column in database schema for user
 
 
-## Work in progress
-- DONE: defining how to store bible  (sql table)
-- DONE: parsing a bible and put it in the database
-- DONE: Endpoint to retreive verses list from a book chapter
-    (req: Mattew 12 1-25 --> Book: Mattew, Chapter:12, verse:1-15)
-    (resp: json with all verses)
 

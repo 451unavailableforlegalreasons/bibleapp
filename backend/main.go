@@ -56,10 +56,12 @@ func main() {
 
 
     bibleRouter := r.PathPrefix("/bible").Subrouter()
-    bibleRouter.HandleFunc("/getverses/{edition:[0-9]+}/{book:[0-9]+}/{chapter:[0-9]+}/{versefrom:[0-9]+}/{verseto:[0-9]+}", bible.GetVerses).Methods("GET");
-    bibleRouter.HandleFunc("/geteditions", bible.GetBibleEditions)
-    bibleRouter.HandleFunc("/getbooksofedition/{edition:[0-9]+}", bible.GetBibleBooksFromEdition)
-    bibleRouter.HandleFunc("/getnumberofversefrombookfromedition/{edition:[0-9]+}/{book:[0-9]+}", bible.GetNumberOfVersesFromBookFromEdition)
+    // bibleRouter.HandleFunc("/getverses/{edition:[0-9]+}/{book:[0-9]+}/{chapter:[0-9]+}/{versefrom:[0-9]+}/{verseto:[0-9]+}", bible.GetVerses).Methods("GET");
+    bibleRouter.HandleFunc("/edition/{edition:[0-9]+}", bible.GetBible)
+    bibleRouter.HandleFunc("/listeditions", bible.GetBibleEditions)
+    // use less endpoint to delete in future 
+    // bibleRouter.HandleFunc("/getbooksofedition/{edition:[0-9]+}", bible.GetBibleBooksFromEdition)
+    // bibleRouter.HandleFunc("/getnumberofversefrombookfromedition/{edition:[0-9]+}/{book:[0-9]+}", bible.GetNumberOfVersesFromBookFromEdition)
 
     bibleRouter.HandleFunc("/highlight", bible.ReadHighlight).Methods("GET")
     bibleRouter.HandleFunc("/highlight", bible.CreateHighlight).Methods("POST")
@@ -75,7 +77,7 @@ func main() {
 
     srv := &http.Server{
         Handler:      r,
-        Addr:         "localhost:8080",
+        Addr:         "localhost:8082",
         // Good practice: enforce timeouts for servers you create!
         WriteTimeout: 15 * time.Second,
         ReadTimeout:  15 * time.Second,
