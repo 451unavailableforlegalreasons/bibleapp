@@ -1,5 +1,14 @@
 # Notes about the Bible app project
 
+# Changes
+- the server won't distribute verses with an api anymore but give the entire bible version to the browser (to be stored locally (an edition never changes so its ok)).
+- new way of doing things:
+    - user request a default formated bibile edition (on first load, then user can change the edition)
+    - server gives it
+    - edition stored locally on user storage
+    - highlights... are still pushed to the server (since the edition is formated, the char count, verse number will be the same)
+    - navigation doesn't iumplies requests anymore but saving browser state...
+
 ## Functionalities to implement:
 - users acounts (storing the right data in permanent database - sqlite for now)
     - DONE:define user requirements: (email, password, fullname, age, gender, country, language)
