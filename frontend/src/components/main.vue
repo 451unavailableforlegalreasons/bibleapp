@@ -1,8 +1,16 @@
 <template>
 
  
-<main  class="flex align-center justify-center" style="border: 1px solid green">
-    <div id="mainpage" class="mainpage mx-2 flex justify-evenly py-auto columns-2xs h-screen content-center">
+<main  class="flex align-center justify-center flex-col " style="border: 1px solid green">
+    <div id="nav" class="d-flex flex flex-row justify-between align-middle">
+        <Dmenu />
+        <h1 id="bookname" class="text-xl font-bold leading-none tracking-tight text-gray-900 md:text-2xl lg:text-3xl text-center py-auto">{{ bibleedition.name + ': ' + biblebook.name + ' ' + chapter }}</h1>
+        
+        <div id="idk">
+        --
+        </div>
+    </div>
+    <div id="mainpage" class="mainpage mx-2 flex justify-evenly  columns-2xs h-full content-center">
         <Turnpage turndirection="left" 
                   @turnpage="turnpage"
         />
@@ -30,16 +38,19 @@
 
 import Page from './page.vue'
 import  Turnpage from "./turnpage.vue"
+import Dmenu from "./dropdown.vue"
 
 export default {
-  name: 'App',
+  name: 'main',
   components: {
       Page,
       Turnpage,
+      Dmenu,
   },
   data: function() {
       return {
-          gobalastverseinserted: 0, // for turning page to the right
+          backwardversestart: 0, // 
+          gobalastverseinserted: 0, // for turning page to the right (when right button is clicked, go on from this index)
           lastinsertedindex: 0, // for page 2 to go where page 1 was filled
           bibleedition: {"name": "unknown", "id": 1},
           biblebook: {"name": "Genesis", "ordnum": 1},
@@ -173,6 +184,12 @@ html * {
   /*height: 80vh;*/
 }
 main {
- height: 100vh;
+    height: 100vh;
+}
+div.mainpage {
+ height: 90vh;
+}
+div.nav {
+    height: 10vh;
 }
 </style>

@@ -1,6 +1,6 @@
 <template>
 
-    <div class="page  container my-auto p-4 h-5/6" v-bind:id="pageid">
+    <div class="page  container my-auto h-5/6" v-bind:id="pageid">
       <p v-if="(this.lastinsertedindex !== 0 && this.pagenum === 2) || (this.pagenum === 1)" v-for="(value, key) in localverses" class="verse" :id="value.vnum">
       <span class="chapter" v-if="value.vnum === 1">{{ chapter }} <span style="opacity: 0;font-size:0.7rem;" id="whitespace">a</span>  </span>
         <sup>{{ value.vnum }}</sup>{{ value.verse }}
