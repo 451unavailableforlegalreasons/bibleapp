@@ -1,8 +1,8 @@
 <template>
 
     <div id="App">
-        <template v-if="this.hasselectededition === true">
-            <MainPage/>
+        <template v-if="this.pageloadingdata.hasselectededition === true">
+            <MainPage :bible=bible :pageloadingdata=pageloadingdata />
         </template>
         <template v-else>
             <SelectBibleEdition @selectEd=selectEd />
@@ -28,28 +28,68 @@ export default {
           pageloadingdata: {
               hasselectededition: false,
               preferededition: {id: null, name:null, lang:null},
+              preferences: {layout: "scroll"},
               lastvisitdata: {
                   edition: null,
-                  book: null,
-                  chapter:null,
+                  // for now use default values:
+                  book: 0,
+                  chapter: 0,
+                  // book: null,
+                  // chapter:null,
                   firstdisplayedverse: null,
               },
           },
+          bible: undefined, // this contains the json bible
       }
   },
   methods: {
-      selectEd: function (editionid) {
-          console.log('received edition:', editionid)
+      selectEd: function (edition) {
           this.pageloadingdata.hasselectededition = true
-          this.pageloadingdata.preferededition = editionid 
+          this.pageloadingdata.preferededition = edition.id 
           localStorage.setItem("pageloadingdata", this.pageloadingdata)
+          this.pageloadingdata.lastvisitdata.edition = edition
+          if (edition.editionid == 2) {
+              // fetch te corresponding bible edition and store it inside the index db 
+              // the other views/components will use the dible object to lookup verses...
+              // the indexed db is just for persistent localstorage (more space)
+              // and they will look inside the localStorage for the bookmark/lastvisitedpage/prefered edition/...
 
+
+
+
+                  // don't use fecth, its async and we can't do it here
+              const request = new XMLHttpRequest();
+              request.open("GET", "es_rvr.json", false); 
+              request.send(null);
+
+              if (request.status === 200) {
+                  // console.log(request.response);
+                  this.bible = JSON.parse(request.response)
+              } else {
+                  console.log(request.status)
+                  console.log(request.response)
+              }
+                  
+
+
+
+
+
+
+
+
+
+
+
+          } else {
+              console.log("sry can't fetch this edition'")
+          }
       }
   },
   beforeMount() {
       // see if user has already used the app and put his prefered edition at last visited page or ask him to select edition
       let pageloadingdata = localStorage.getItem("pageloadingdata")
-      console.log(pageloadingdata)
+      // console.log(pageloadingdata)
       if (pageloadingdata === null) {
           // create the object model and store it with no content
           pageloadingdata = {
@@ -74,7 +114,7 @@ export default {
         pageloadingdata: {
             handler (old, newone) {
                 let pageloadstr = JSON.stringify(newone)
-                console.log("into str: ", pageloadstr)
+                // console.log("into str: ", pageloadstr)
                 localStorage.setItem("pageloadingdata", pageloadstr)
             },
             deep:true,
@@ -86,7 +126,7 @@ export default {
             let parsedpageloadingdata = JSON.parse(pageloadingdata)
             return parsedpageloadingdata
         }
-    }
+    },
 
    
 }
