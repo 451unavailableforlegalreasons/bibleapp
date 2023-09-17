@@ -19,7 +19,6 @@ html {
 }
 
 html * {
-    border: 0px solid !important;
     font-family: "dayrom";
 }
 

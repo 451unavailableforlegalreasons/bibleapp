@@ -17,8 +17,17 @@ library.add(
     faHouse,
 );
 
+
+
+
+
+
+
+
+
 import './assets/css/tailwind.css';
 import router from './router'
-createApp(App).use(router)
+createApp(App)
+.use(router)
 .component("font-awesome-icon", FontAwesomeIcon)
 .mount('#app')
