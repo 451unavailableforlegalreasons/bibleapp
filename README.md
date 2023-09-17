@@ -5,7 +5,7 @@ This is a personal project that i'm currently developping.
 Any contribution is welcome after i finish the first version
 
 for now here is a screenshot of what i did. It's not much but more is comming (I have classes so i cannot do this daily but i try)
-![Frontend in construction](doc/bibleappdemo_dev.mp4)
+![Frontend in construction](doc/devbibleapp.gif)
 
 ## Objective
 The Bible app is an app that allows you to study the bible by highlithing paragaphs and write text associated.
