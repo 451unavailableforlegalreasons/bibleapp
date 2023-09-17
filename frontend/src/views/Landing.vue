@@ -1,8 +1,30 @@
 <template>
-    <p>Display thoses links only if the user is not authenticated (for him to register, login, select and edition (it will then redirect automatically))</p>
-    <router-link to="/">Home</router-link> |
-    <router-link to="/chooseedition">Choose  edition to read</router-link>
-    <router-view/>
+    <h1>Bible Study</h1>
+
+
+    <h2>A minimalist application to read the bible and tool to never forget the <br/> verses that resonate with you</h2>
+    <p>You can use the application without creating an account by first selecting the edition you want to read by clicking 
+    <router-link to="/chooseedition">here</router-link>
+    </p>
+
+    <p>
+    If you don't know what this application is about, i highly encourage you to start by 
+    <router-link to="/discover">going throught the discover guide</router-link>
+    It will show you all the functionality of the app so you can start on the right foot in your bible study
+    </p>
+
+    <p>
+    If you want to do something else, here are the links you can click
+    <router-link to="/discover">link</router-link>
+    <router-link to="/discover">link</router-link>
+    <router-link to="/discover">link</router-link>
+    <router-link to="/discover">link</router-link>
+    <router-link to="/discover">link</router-link>
+    <router-link to="/discover">link</router-link>
+    </p>
+
+
+    <!-- <router-view/> -->
 </template>
 
 

@@ -1,12 +1,12 @@
 <template>
     <div id="nav" class="d-flex flex flex-row justify-between align-middle">
-        <Dmenu />
-        <h1 id="maintitle" class="text-xl font-bold leading-none tracking-tight text-gray-900 md:text-2xl lg:text-3xl text-center py-auto">
+        <Dmenu :class="{ 'basis-1/3':true, 'justify-start':true }"/>
+        <h1 id="maintitle" class="text-xl font-bold leading-none tracking-tight text-gray-900 md:text-2xl lg:text-3xl text-center py-auto basis-1/3">
             {{ maintitle }}
         </h1>
         
-        <div id="rightslots">
-            <!-- <rightslots /> -->
+        <div id="rightslots" class="basis-1/3">
+            <slot></slot>
         </div>
     </div>
 </template>
@@ -22,7 +22,7 @@ export default {
   components: {
       Dmenu,
   },
-  props: ["maintitle", "rightslots"],
+  props: ["maintitle"],
   data: function() {
       return {
       }

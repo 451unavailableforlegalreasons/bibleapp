@@ -1,7 +1,7 @@
 <template>
 
  
-    <div @click="turnpage" class="turnpage m-0 px-6 flex flex-col align-center justify-center">
+    <div @click="turnpage" class="box-border turnpage m-0 px-6 flex flex-col align-center justify-center">
   <p class="align-self-center justify-self-center text-center">
   {{ turndirection==="left" ? '<' : '>'}}
   </p>

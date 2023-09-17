@@ -177,7 +177,7 @@ hr {
 }
 .header--button {
   top: 0;
-  right: 0;
+  left: 0;
   position: absolute;
   margin: 0;
   padding: 0;
@@ -241,11 +241,11 @@ hr {
 }
 
 .slide-fade-enter {
-  transform: translateX(31px);
+  transform: translateX(-31px);
 }
 
 .slide-fade-leave-active {
-  transform: translateX(-31px);
+  transform: translateX(31px);
 }
 
 .dropdown-enter-active,
