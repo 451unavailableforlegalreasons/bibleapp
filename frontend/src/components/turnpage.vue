@@ -2,7 +2,7 @@
 
  
     <div @click="turnpage" class="turnpage m-0 px-6 flex flex-col align-center justify-center">
-  <p class="align-self-center justify-self-center">
+  <p class="align-self-center justify-self-center text-center">
   {{ turndirection==="left" ? '<' : '>'}}
   </p>
 </div>
@@ -38,7 +38,7 @@ height: 100%;
 transition: 0.4s background-color;
 }
 .turnpage:hover {
-  background-color: #f0e7da;
+  background-color: #F7E3BC;
 }
 
 </style>

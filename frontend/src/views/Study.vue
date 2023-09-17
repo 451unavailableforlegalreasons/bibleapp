@@ -7,8 +7,7 @@
         <h1 id="bookname" class="text-xl font-bold leading-none tracking-tight text-gray-900 md:text-2xl lg:text-3xl text-center py-auto">{{ bibleedition+ ': ' + biblebook+ ' ' + chapter }}</h1>
         
         <div id="quicktools">
-            icon
-            <font-awesome-icon :icon="'fas hammer'" />
+        search, goto, highlight, bookmark ?, 
         </div>
     </div>
     <div id="mainpage" class="mainpage mx-2 flex justify-evenly  columns-2xs h-full content-center">
@@ -16,7 +15,7 @@
                   :class="layoutstyle"
                   @turnpage="turnpage"
         />
-        <template v-if="pageloadingdata.preferences.layout=== 'page'">
+        <template v-if="layout === 'page'">
             <Page @pagefilled="pagefilled"
             @getmoreverses="getmoreverses" 
             :lastinsertedindex=currentpageinfo.lastinsertedindex
@@ -30,7 +29,7 @@
             :chapter=chapter 
             :verses=allverses />
         </template>
-        <template v-else-if="pageloadingdata.preferences.layout === 'scroll'">
+        <template v-else-if="layout === 'scroll'">
             <ScrollPage :bible=bible :bookindex=bookindex />
         </template>
         <Turnpage turndirection="right" 
@@ -43,11 +42,12 @@
 </template>
 
 <script>
+import { Settings } from "../assets/js/settings.js"
 
-import Page from './page.vue'
-import ScrollPage from './scrollpage.vue'
-import  Turnpage from "./turnpage.vue"
-import Dmenu from "./dropdown.vue"
+import Page from '../components/page.vue'
+import ScrollPage from '../components/scrollpage.vue'
+import Turnpage from "../components/turnpage.vue"
+import Dmenu from "../components/dropdown.vue"
 
 export default {
   name: 'main',
@@ -57,9 +57,10 @@ export default {
       Dmenu,
       ScrollPage,
   },
-  props: ["bible", "pageloadingdata"],
   data: function() {
       return {
+          bible: undefined,
+          layout: 'scroll', // default
           bookindex: 0,
           previouspageinfo: { // when turning right, save the previous state here and when turn left if clicked, bring thoses back
               startvindex: -1, // if it doesn't exists in local storage, put the user on the 1st page of an edition
@@ -73,14 +74,10 @@ export default {
           chapter: 1,
           allverses: [
               {"vnum":1,"verse":"In the beginning God created the heaven and the earth."},
-              {"vnum":3,"verse":"And God said, Let there be light: and there was light."},
-              {"vnum":4,"verse":"And God saw the light, that it was good: and God divided the light from the darkness."},
           ],
       }
   },
   methods: {
-      fetchverses(bibleedition, biblebook, biblechapter, fromverse, toverse) {
-      },
       turnpage(turndirection) {
 
         // turnpage for scrollpage format (change the bookindex)
@@ -91,14 +88,6 @@ export default {
         } else {
             console.log("error turning page")
         }
-
-
-
-
-
-
-
-
 
 
       // turnpage for 2 page format
@@ -131,43 +120,113 @@ export default {
       }
 
   },
-  beforeMount() {
-     // based on pageloadingdata lastinsertedindex... update the allverses and other fields for pages components to render where the user left last time
-     this.bibleedition = this.pageloadingdata.lastvisitdata.edition.name
-     let book = this.bible[this.pageloadingdata.lastvisitdata.book]
-     this.biblebook = book.name
-     this.chapter = this.pageloadingdata.lastvisitdata.chapter+1
+    created () {
+        // look for past usage of the app (edition that has been visited before: restore it (push route to it))
+        // or display welcome page | select edition
+
+        // based on usersettings lastinsertedindex... update the allverses and other fields for pages components to render where the user left last time
+        this.bibleedition = this.$route.params.edition
 
 
 
-     let tmparr = []
-     for (const [index, verse] of book["chapters"][this.chapter-1].entries()) {
-         let obj = {"vnum": index+1, "verse": verse}
-         tmparr.push(obj)
-     }
-     console.log(tmparr)
-     this.allverses = tmparr
-  },
 
-  computed: {
-    biblebook: function () {
-        return this.bible[this.bookindex].name
-    },
-    chapter: function () {
-        // look for the chapter number on screen (visible or last seen | think about screen having two number diaplyed --> breakpoint to switch from one to the other)
-        return ""
-    },
-    layoutstyle: function () {
-        if (this.pageloadingdata.preferences.layout === 'scroll') {
-            return {
-                'basis-2/12': true,
-                'sticky': true,
+
+
+
+
+
+        if (this.bibleedition == 2) {
+            // fetch te corresponding bible edition and store it inside the index db 
+            // the other views/components will use the dible object to lookup verses...
+            // the indexed db is just for persistent localstorage (more space)
+            // and they will look inside the localStorage for the bookmark/lastvisitedpage/prefered edition/...
+
+
+                // don't use fecth, its async and we can't do it here
+            const request = new XMLHttpRequest();
+            request.open("GET", "http://localhost:8080/es_rvr.json", false); 
+            request.send(null);
+
+            if (request.status === 200) {
+                // console.log(request.response);
+                this.bible = JSON.parse(request.response)
+            } else {
+                console.log(request.status)
+                console.log(request.response)
             }
 
+        } else {
+            console.log("sry can't fetch this edition'")
         }
-    }
-  }
 
+
+
+
+        /*
+            Books, chapter, verse number information should be in the url or localstorage    
+        */
+
+            // lastvisitdata: {
+            //     edition: null,
+            //     book: 0,
+            //     chapter: 0,
+            //     firstdisplayedverse: 0,
+            // },
+        let s = new Settings
+        s.loadfromlocalStorage()
+        s.settings.lastvisitdata.edition = this.bibleedition
+        s.writetolocalStorage()
+        let book = this.bible[s.settings.lastvisitdata.book]
+        this.biblebook = book.name
+        this.chapter = s.settings.lastvisitdata.chapter+1
+
+        let tmparr = []
+        for (const [index, verse] of book["chapters"][this.chapter-1].entries()) {
+            let obj = {"vnum": index+1, "verse": verse}
+            tmparr.push(obj)
+        }
+        this.allverses = tmparr
+    },
+    watch: {
+        pageloadingdata: {
+            handler (old, newone) {
+                let usettings = new Settings
+                usettings.settings = newone
+                usettings.writetolocalStorage()
+            },
+            deep:true,
+        }
+    },
+    computed: {
+        // pageloadingdata() {
+        //     let s = new Settings
+        //     s.loadfromlocalStorage()
+        //     return s.settings
+        // },
+
+        biblebook: function () {
+            return this.bible[this.bookindex].name
+        },
+        chapter: function () {
+            // look for the chapter number on screen (visible or last seen | think about screen having two number diaplyed --> breakpoint to switch from one to the other)
+            return ""
+        },
+        layoutstyle: function () {
+            if (this.usersettings === undefined) {
+                return {
+                    'basis-2/12': true,
+                    'sticky': true,
+                }
+            }
+            else if (this.usersettings.preferences.layout | "scroll" === 'scroll') {
+                return {
+                    'basis-2/12': true,
+                    'sticky': true,
+                }
+
+            }
+        }
+    },
 
 
 
