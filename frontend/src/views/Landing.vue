@@ -15,7 +15,7 @@
 
     <p>
     If you want to do something else, here are the links you can click
-    <router-link to="/discover">link</router-link>
+    <router-link to="/users/auth">Login/Register</router-link>
     <router-link to="/discover">link</router-link>
     <router-link to="/discover">link</router-link>
     <router-link to="/discover">link</router-link>

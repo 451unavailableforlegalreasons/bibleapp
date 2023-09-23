@@ -3,6 +3,10 @@ import StudyView from '../views/Study.vue'
 import ChooseEdition from '../views/ChooseEdition.vue'
 import Landing from '../views/Landing.vue'
 
+
+
+import Authenticate from '../views/users/Authentication.vue'
+
 const routes = [
     {
         path: "/",
@@ -18,7 +22,17 @@ const routes = [
         path: '/chooseedition',
         name: 'chooseEdition',
         component: ChooseEdition
-    }
+    },
+    {
+        path: '/users/auth',
+        name: 'loginORregister',
+        component: Authenticate
+    },
+    // {
+    //     path: '/chooseedition',
+    //     name: 'chooseEdition',
+    //     component: ChooseEdition
+    // },
 ]
 
 const router = createRouter({
